@@ -10,7 +10,7 @@ int write_file(const char *path, int size) {
         return EXIT_FAILURE;
     }
     for (int i = 0; i < size; ++i) {
-        fprintf(f, "%d ", i);
+        fprintf(f, "%d ", 1);
     }
     fclose(f);
     return EXIT_SUCCESS;

@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
-project(hw2 C CXX)
+project(hw_2 C CXX)
+
+option(parallel "Build parallel version" OFF)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
@@ -13,9 +15,20 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -Wall -Wpedantic -Werror --cove
 add_library(input_data STATIC project/input_data.c)
 target_include_directories(input_data PUBLIC project)
 
-add_library(consistent STATIC project/prog.c)
+add_library(consistent STATIC project/prog.c )
 target_include_directories(consistent PUBLIC project)
+target_link_libraries(consistent PUBLIC input_data)
 
+add_library(parallel SHARED project/parallel_prog.c)
+target_include_directories(parallel PUBLIC project)
+target_link_libraries(parallel PUBLIC input_data)
 
 add_executable(hw_2 project/main.c )
-target_link_libraries(hw_2 input_data consistent)
+
+if(parallel)
+    target_link_libraries(hw_2 parallel consistent)
+else()
+    target_link_libraries(hw_2  parallel consistent )
+endif(parallel)
+
+

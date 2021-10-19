@@ -4,7 +4,7 @@
 #include <malloc.h>
 #include <stddef.h>
 
-res_coef *linear_regress(const int *a, const int size) {
+res_coef *linear_regress( int *a, const int size) {
     if (size == 0) {
         return NULL;
     }
@@ -25,6 +25,9 @@ res_coef *linear_regress(const int *a, const int size) {
     Sxx /= size;
 
     res_coef *res = malloc(sizeof(res_coef));
+    if(res == NULL){
+        return NULL;
+    }
     res->k = (Sx * Sy - Sxy) / (Sx * Sx - Sxx);
     res->b = (Sxy - res->k * Sxx) / Sx;
     return res;
