@@ -28,12 +28,14 @@ int main() {
     if (a == NULL) {
         return EXIT_FAILURE;
     }
-    res_coef *res;
+
+
     struct timespec start, finish;
 
     clock_gettime(CLOCK_MONOTONIC, &start);
-    // последовательное решение - 1 поток
-    res = linear_regress(a, size);
+
+    res_coef *res = run_prog(a, size);
+    free(a);
     clock_gettime(CLOCK_MONOTONIC, &finish);
 
     double elapsed = (double) (finish.tv_sec - start.tv_sec);

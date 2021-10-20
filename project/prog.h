@@ -9,6 +9,6 @@ struct res_coefficients{
 };
 typedef struct res_coefficients res_coef;
 
-res_coef* linear_regress( int*,int );
+res_coef* run_prog( int*,int );
 
 #endif     //   HW_2_PROG_H

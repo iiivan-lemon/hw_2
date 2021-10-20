@@ -4,13 +4,14 @@
 
 
 int write_file(const char *path, int size) {
+
     FILE *f;
     f = fopen(path, "w+");
     if (!f) {
         return EXIT_FAILURE;
     }
     for (int i = 0; i < size; ++i) {
-        fprintf(f, "%d ", 1);
+        fprintf(f, "%d ", i);
     }
     fclose(f);
     return EXIT_SUCCESS;
@@ -36,3 +37,4 @@ int *read_file(const char *path, int size) {
     fclose(f);
     return a;
 }
+

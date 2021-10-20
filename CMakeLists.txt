@@ -28,7 +28,7 @@ add_executable(hw_2 project/main.c )
 if(parallel)
     target_link_libraries(hw_2 parallel consistent)
 else()
-    target_link_libraries(hw_2  parallel consistent )
+    target_link_libraries(hw_2   consistent )
 endif(parallel)
 
 

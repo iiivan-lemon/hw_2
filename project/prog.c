@@ -4,7 +4,8 @@
 #include <malloc.h>
 #include <stddef.h>
 
-res_coef *linear_regress( int *a, const int size) {
+res_coef *run_prog( int *a, const int size) {
+
     if (size == 0) {
         return NULL;
     }

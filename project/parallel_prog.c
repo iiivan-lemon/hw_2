@@ -5,8 +5,8 @@
 #include "prog.h"
 
 typedef struct {
-    int col_start;
-    int col_end;
+    size_t col_start;
+    size_t col_end;
     int *array;
     double Sx;
     double Sy;
@@ -18,7 +18,7 @@ typedef struct {
 
 void *thread_func(void *thread_data) {
     pthr_data_t *data = (pthr_data_t *) thread_data;
-    for (int i = 0; i < data->col_end - data->col_start; ++i) {
+    for (size_t i = 0; i < data->col_end - data->col_start; ++i) {
         data->Sx += data->col_start + i;
         data->Sy += data->array[i];
         data->Sxy += (data->col_start + i) * data->array[i];
@@ -30,13 +30,19 @@ void *thread_func(void *thread_data) {
 }
 
 
-res_coef *linear_regress(int *a, const int size) {
+res_coef *run_prog(int *a, const int size) {
 
-    int num_of_threads = sysconf(_SC_NPROCESSORS_ONLN);
-    int num_array_thread = size / num_of_threads;
-    if (size % num_of_threads != 0) {
-        int add_num_threads = 0;
-        int residue_array = size % num_of_threads;
+    if(size == 1){
+        return NULL;
+    }
+    size_t num_of_threads = sysconf(_SC_NPROCESSORS_ONLN);
+    if(num_of_threads > size){
+        num_of_threads = size;
+    }
+    size_t num_array_thread = size / num_of_threads;
+    if (size % num_of_threads != 0 && size > num_of_threads) {
+        size_t add_num_threads = 0;
+        size_t residue_array = size % num_of_threads;
         if (residue_array % num_array_thread == 0) {
             add_num_threads = residue_array / num_array_thread;
         } else {
@@ -84,10 +90,10 @@ res_coef *linear_regress(int *a, const int size) {
     double res_Sxy = 0;
     double res_Sxx = 0;
     for (size_t i = 0; i < num_of_threads; i++) {
-        printf("%f --- SX%zu test\n", thread_data[i].Sx,i);
+        /*printf("%f --- SX%zu test\n", thread_data[i].Sx,i);
         printf("%f --- SY%zu test\n", thread_data[i].Sy,i);
         printf("%f --- SXX%zu test\n", thread_data[i].Sxx,i);
-        printf("%f --- SXY%zu test\n", thread_data[i].Sxy,i);
+        printf("%f --- SXY%zu test\n", thread_data[i].Sxy,i);*/
         res_Sx += thread_data[i].Sx;
         res_Sy += thread_data[i].Sy;
         res_Sxx += thread_data[i].Sxx;
@@ -99,7 +105,6 @@ res_coef *linear_regress(int *a, const int size) {
         res->k = (res_Sx * res_Sy - res_Sxy) / (res_Sx * res_Sx - res_Sxx);
         res->b = (res_Sxy - res->k * res_Sxx) / res_Sx;
         if (pthread_join(threads[i], NULL) != 0) {
-            // free(array);
             free(threads);
             free(thread_data);
             return NULL;
