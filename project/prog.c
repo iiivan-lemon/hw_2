@@ -4,7 +4,7 @@
 #include <malloc.h>
 #include <stddef.h>
 
-res_coef *run_prog( int *a, const int size) {
+res_coef *run_prog(int *a,const int size) {
 
     if (size == 0) {
         return NULL;
@@ -20,17 +20,14 @@ res_coef *run_prog( int *a, const int size) {
         Sxy += i * a[i];
         Sxx += i * i;
     }
-    Sx /= size;
-    Sy /= size;
-    Sxy /= size;
-    Sxx /= size;
+
 
     res_coef *res = malloc(sizeof(res_coef));
-    if(res == NULL){
+    if (res == NULL) {
         return NULL;
     }
-    res->k = (Sx * Sy - Sxy) / (Sx * Sx - Sxx);
-    res->b = (Sxy - res->k * Sxx) / Sx;
+    res->k = (Sxy * size - Sx*Sy) / (Sxx * size - Sx*Sx);
+    res->b = (Sy - res->k * Sx) / size;
     return res;
 
 }

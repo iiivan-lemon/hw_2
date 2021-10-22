@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
 #include "input_data.h"
 
 
@@ -7,7 +9,7 @@ int write_file(const char *path, int size) {
 
     FILE *f;
     f = fopen(path, "w+");
-    if (!f) {
+    if (!f || size < 1) {
         return EXIT_FAILURE;
     }
     for (int i = 0; i < size; ++i) {
@@ -18,10 +20,14 @@ int write_file(const char *path, int size) {
 }
 
 int *read_file(const char *path, int size) {
+    if(size < 1){
+        return NULL;
+    }
     int *a = (int *) malloc(size * sizeof(int));
     if (a == NULL) {
         return NULL;
     }
+
     FILE *f;
     f = fopen(path, "r");
     if (!f) {
@@ -35,6 +41,7 @@ int *read_file(const char *path, int size) {
 
     }
     fclose(f);
+
     return a;
 }
 

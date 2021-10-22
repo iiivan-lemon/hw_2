@@ -9,6 +9,7 @@ struct res_coefficients{
 };
 typedef struct res_coefficients res_coef;
 
-res_coef* run_prog( int*,int );
+res_coef* run_prog(  int*, const int );
+
 
 #endif     //   HW_2_PROG_H

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 project(hw_2 C CXX)
 
-option(parallel "Build parallel version" OFF)
+option(parallel "build parallel version" ON)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
@@ -26,9 +26,13 @@ target_link_libraries(parallel PUBLIC input_data)
 add_executable(hw_2 project/main.c )
 
 if(parallel)
-    target_link_libraries(hw_2 parallel consistent)
+    target_link_libraries(hw_2  parallel )
 else()
-    target_link_libraries(hw_2   consistent )
+    target_link_libraries(hw_2 parallel consistent)
 endif(parallel)
 
+find_package(GTest REQUIRED)
+set(SOURCES tests/run_tests.cpp tests/prog_test.cpp tests/stress_test.cpp tests/input_test.cpp)
+add_executable(runTests ${SOURCES})
+target_link_libraries(runTests GTest::gtest consistent parallel input_data)
 
