@@ -1,9 +1,9 @@
-#ifndef HW_2_INPUT_DATA_H
-#define HW_2_INPUT_DATA_H
+#ifndef PROJECT_INPUT_DATA_H_
+#define PROJECT_INPUT_DATA_H_
 
 int write_file(const char *, int);
 
 int *read_file(const char *, int);
 
 
-#endif //HW_2_INPUT_DATA_H
+#endif         //          PROJECT_INPUT_DATA_H_
