@@ -6,14 +6,16 @@ extern "C" {
 #include "input_data.h"
 }
 
-#define SIZE_CONDITION 100
+#define SIZE_CONDITION 100000000
 #define PATH "text.txt"
 
 TEST(TestInputData1, RandomArraySize) {
     size_t size_test = SIZE_CONDITION;
+
     EXPECT_TRUE(write_file(PATH, size_test) == EXIT_SUCCESS);
-    EXPECT_TRUE(read_file(PATH, size_test) != nullptr);
-    int *a = (int *) malloc(size_test * sizeof(int));
+    int *a = read_file(PATH, size_test);
+    EXPECT_TRUE(a != nullptr);
+
     size_t i = 0;
     FILE *f;
     f = fopen(PATH, "r");
