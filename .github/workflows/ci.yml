@@ -17,7 +17,7 @@ jobs:
         run: sudo apt install lcov
 
       - name: Build
-        run: mkdir build && cp env build/ && cd build && cmake .. && make
+        run: mkdir build && cd build && cmake .. && make
 
       - name: cppcheck-action
         uses: deep5050/cppcheck-action@v2.0.0
