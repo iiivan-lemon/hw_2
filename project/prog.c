@@ -21,7 +21,7 @@ res_coef *run_prog(int *a, const int size) {
     }
 
 
-    res_coef *res = malloc(sizeof(res_coef));
+    res_coef *res = (res_coef*)malloc(sizeof(res_coef));
     if (res == NULL) {
         return NULL;
     }
