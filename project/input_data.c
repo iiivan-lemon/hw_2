@@ -25,25 +25,24 @@ int *read_file(const char *path, int size) {
     if (size < 1) {
         return NULL;
     }
-    int *a = (int *) malloc(size * sizeof(int));
-
-    if (a == NULL) {
-        return NULL;
-    }
     FILE *f;
     f = fopen(path, "r");
     if (!f) {
-        free(a);
+        return NULL;
+    }
+
+    int *a = (int *) malloc(size * sizeof(int));
+    if (a == NULL) {
         return NULL;
     }
     for (int i = 0; i < size; ++i) {
         if (fscanf(f, "%d", &a[i]) != 1) {
             fclose(f);
+            free(a);
             return NULL;
         }
     }
     fclose(f);
-
     return a;
 }
 
