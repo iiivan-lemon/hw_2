@@ -27,8 +27,9 @@ jobs:
       - name: Tests
         run: mkdir runtests && cp env runtests/ && cd runtests && cmake .. && make && ./runTests && lcov -t "hw2" -o coverage.txt -c -d . && cp coverage.txt ../
 
-      - name: Valgrind
+      - name: Valgrind install
         run: sudo apt-get update && sudo apt-get install -y valgrind && mkdir valgrind_tests && cd valgrind_tests && cmake .. && make 
+      - name: Valgrind 
         run: valgrind --tool=memcheck --leak-check=full ./runTests
 
       - name: Upload coverage to Codecov
