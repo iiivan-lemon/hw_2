@@ -10,7 +10,7 @@ int write_file(const char *path, int size) {
         return EXIT_FAILURE;
     }
     FILE *f;
-    f = fopen(path, "w+");
+    f = fopen(path, "w");
     if (!f) {
         return EXIT_FAILURE;
     }
