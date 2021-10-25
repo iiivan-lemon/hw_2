@@ -1,12 +1,61 @@
 cmake_minimum_required(VERSION 3.20)
 project(hw_2 C CXX)
 
-option(parallel "build parallel version" ON)
+option(parallel "build" OFF)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
-set(GCC_COVERAGE_COMPILE_FLAGS "-pthread")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}" )
+set(GCC_COVERAGE_COMPILE_FLAGS "-pthread ")
+# ThreadSanitizer
+set(CMAKE_C_FLAGS_TSAN
+        "-fsanitize=thread -g -O1"
+        CACHE STRING "Flags used by the C compiler during ThreadSanitizer builds."
+        FORCE)
+set(CMAKE_CXX_FLAGS_TSAN
+        "-fsanitize=thread -g -O1"
+        CACHE STRING "Flags used by the C++ compiler during ThreadSanitizer builds."
+        FORCE)
+
+# AddressSanitize
+set(CMAKE_C_FLAGS_ASAN
+        "-fsanitize=address -fno-optimize-sibling-calls -fsanitize-address-use-after-scope -fno-omit-frame-pointer -g -O1"
+        CACHE STRING "Flags used by the C compiler during AddressSanitizer builds."
+        FORCE)
+set(CMAKE_CXX_FLAGS_ASAN
+        "-fsanitize=address -fno-optimize-sibling-calls -fsanitize-address-use-after-scope -fno-omit-frame-pointer -g -O1"
+        CACHE STRING "Flags used by the C++ compiler during AddressSanitizer builds."
+        FORCE)
+
+# LeakSanitizer
+set(CMAKE_C_FLAGS_LSAN
+        "-fsanitize=leak -fno-omit-frame-pointer -g -O1"
+        CACHE STRING "Flags used by the C compiler during LeakSanitizer builds."
+        FORCE)
+set(CMAKE_CXX_FLAGS_LSAN
+        "-fsanitize=leak -fno-omit-frame-pointer -g -O1"
+        CACHE STRING "Flags used by the C++ compiler during LeakSanitizer builds."
+        FORCE)
+
+# MemorySanitizer
+set(CMAKE_C_FLAGS_MSAN
+        "-fsanitize=memory -fno-optimize-sibling-calls -fsanitize-memory-track-origins=2 -fno-omit-frame-pointer -g -O2"
+        CACHE STRING "Flags used by the C compiler during MemorySanitizer builds."
+        FORCE)
+set(CMAKE_CXX_FLAGS_MSAN
+        "-fsanitize=memory -fno-optimize-sibling-calls -fsanitize-memory-track-origins=2 -fno-omit-frame-pointer -g -O2"
+        CACHE STRING "Flags used by the C++ compiler during MemorySanitizer builds."
+        FORCE)
+
+# UndefinedBehaviour
+set(CMAKE_C_FLAGS_UBSAN
+        "-fsanitize=undefined"
+        CACHE STRING "Flags used by the C compiler during UndefinedBehaviourSanitizer builds."
+        FORCE)
+set(CMAKE_CXX_FLAGS_UBSAN
+        "-fsanitize=undefined"
+        CACHE STRING "Flags used by the C++ compiler during UndefinedBehaviourSanitizer builds."
+        FORCE)
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}"  )
 
 
 set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS} -Wall -Wpedantic -Werror --coverage")
@@ -26,9 +75,11 @@ target_link_libraries(parallel PUBLIC input_data)
 add_executable(hw_2 project/main.c )
 
 if(parallel)
+    message("parallel")
     target_link_libraries(hw_2  parallel )
 else()
-    target_link_libraries(hw_2 parallel consistent)
+    message("consistent")
+    target_link_libraries(hw_2   consistent)
 endif(parallel)
 
 find_package(GTest REQUIRED)

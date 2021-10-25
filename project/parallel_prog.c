@@ -32,7 +32,7 @@ void *thread_func(void *thread_data) {
 
 res_coef *run_prog(int *a, const int size) {
 
-    if (size == 1) {
+    if (size <= 1) {
         return NULL;
     }
     size_t num_of_threads = sysconf(_SC_NPROCESSORS_ONLN);
@@ -84,21 +84,15 @@ res_coef *run_prog(int *a, const int size) {
 
 
     res_coef *res = malloc(sizeof(res_coef));
-
+    if(!res){
+        return NULL;
+    }
 
     double res_Sx = 0;
     double res_Sy = 0;
     double res_Sxy = 0;
     double res_Sxx = 0;
     for (size_t i = 0; i < num_of_threads; i++) {
-        /*printf("%f --- SX%zu test\n", thread_data[i].Sx,i);
-        printf("%f --- SY%zu test\n", thread_data[i].Sy,i);
-        printf("%f --- SXX%zu test\n", thread_data[i].Sxx,i);
-        printf("%f --- SXY%zu test\n", thread_data[i].Sxy,i);
-        res_Sx += thread_data[i].Sx ;
-        res_Sy += thread_data[i].Sy ;
-        res_Sxx += thread_data[i].Sxx;
-        res_Sxy += thread_data[i].Sxy;*/
 
         if (pthread_join(threads[i], NULL) != 0) {
             free(threads);
