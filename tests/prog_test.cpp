@@ -9,7 +9,7 @@ extern "C" {
 }
 
 #define STRESS_ITERATION_NUMBER 10
-#define SIZE_CONDITION 100000000
+#define SIZE_CONDITION 100
 
 TEST(TestConsistent1, Bisector) {
     int *a = (int *) malloc(SIZE_CONDITION * sizeof(int));

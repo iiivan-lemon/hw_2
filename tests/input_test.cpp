@@ -6,7 +6,7 @@ extern "C" {
 #include "input_data.h"
 }
 
-#define SIZE_CONDITION 100000000
+#define SIZE_CONDITION 100
 #define PATH "text.txt"
 
 TEST(TestInputData1, RandomArraySize) {
