@@ -1,0 +1,39 @@
+name: build
+on: [push]
+
+jobs:
+  build:
+
+    name: ubuntu
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install GTest
+        run: sudo apt-get install libgtest-dev -y && sudo cmake CMakeLists.txt && sudo make && cd lib && sudo cp *.a /usr/lib
+
+      - name: Install lcov
+        run: sudo apt install lcov
+
+      - name: Build
+        run: mkdir build && cp env build/ && cd build && cmake .. && make
+
+      - name: cppcheck-action
+        uses: deep5050/cppcheck-action@v2.0.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN}}
+
+      - name: Tests
+        run: mkdir runtests && cp env runtests/ && cd runtests && cmake .. && make && ./runTests && lcov -t "hw2" -o coverage.txt -c -d . && cp coverage.txt ../
+
+      - name: Valgrind
+        run: sudo apt-get update && sudo apt-get install -y valgrind && mkdir valgrind_tests && cd valgrind_tests && cmake .. && make 
+        run: valgrind --tool=memcheck --leak-check=full ./runTests
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage.txt
+          flags: unittests

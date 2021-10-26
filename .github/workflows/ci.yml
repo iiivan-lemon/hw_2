@@ -1,0 +1,41 @@
+name: build
+on: [push]
+
+jobs:
+  build:
+
+    name: ubuntu
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install GTest
+        run: sudo apt-get install libgtest-dev -y && cd /usr/src/gtest && sudo cmake CMakeLists.txt && sudo make && cd lib && sudo cp *.a /usr/lib
+
+      - name: Install lcov
+        run: sudo apt install lcov
+
+      - name: Build
+        run: mkdir build && cd build && cmake .. && make
+
+      - name: cppcheck-action
+        uses: deep5050/cppcheck-action@v2.0.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN}}
+
+      - name: Tests
+        run: mkdir runtests && cd runtests && cmake .. && make  && ./tests && ./tests_parallel && ./comparison && lcov -t "hw_2" -o coverage.txt -c -d . && cp coverage.txt ../
+
+      - name: Valgrind install
+        run: sudo apt-get update && sudo apt-get install -y valgrind && mkdir valgrind_tests  
+      - name: Valgrind 
+        run: cd valgrind_tests && cmake .. && make && valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all -s -q ./tests && valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all -s -q ./tests_parallel
+      
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          token: cd2c0f3e-178d-49fa-bdb1-f9cdce94d39c
+          file: ./coverage.txt
+          flags: unittests
