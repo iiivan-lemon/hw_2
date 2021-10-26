@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(GCC_COVERAGE_COMPILE_FLAGS "-pthread ")
 # ThreadSanitizer
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -Wall -Wpedantic -Werror --coverage -fsanitize=address  -fsanitize=leak -fsanitize=undefined ")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -Wall -Wpedantic -Werror --coverage")
 
 
 add_library(input_data STATIC project/input_data.c)

@@ -25,7 +25,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN}}
 
       - name: Tests
-        run: mkdir runtests && cd runtests && cmake -fsanitize=address  -fsanitize=leak .. && make && ./tests && ./tests_parallel && ./comparison && lcov -t "hw2" -o coverage.txt -c -d . && cp coverage.txt ../
+        run: mkdir runtests && cd runtests && cmake .. && make && ./tests && ./tests_parallel && ./comparison && lcov -t "hw2" -o coverage.txt -c -d . && cp coverage.txt ../
 
       - name: Valgrind install
         run: sudo apt-get update && sudo apt-get install -y valgrind && mkdir valgrind_tests  
