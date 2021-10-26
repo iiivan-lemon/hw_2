@@ -83,7 +83,12 @@ else()
 endif(parallel)
 
 find_package(GTest REQUIRED)
-set(SOURCES tests/run_tests.cpp tests/prog_test.cpp tests/stress_test.cpp tests/input_test.cpp)
-add_executable(runTests ${SOURCES})
-target_link_libraries(runTests GTest::gtest consistent parallel input_data)
 
+add_executable(tests tests/prog_test.cpp tests/input_test.cpp )
+target_link_libraries(tests GTest::gtest consistent input_data)
+
+add_executable(tests_parallel tests/parallel_prog_test.cpp tests/input_test.cpp)
+target_link_libraries(tests_parallel GTest::gtest  parallel input_data)
+
+add_executable(comparison tests/comparison.cpp )
+target_link_libraries(comparison GTest::gtest)

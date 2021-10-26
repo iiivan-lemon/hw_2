@@ -15,7 +15,7 @@ int write_file(const char *path, int size) {
         return EXIT_FAILURE;
     }
     for (int i = 0; i < size; ++i) {
-        fprintf(f, "%d ", i);
+        fprintf(f, "%d ", 10);
     }
     fclose(f);
     return EXIT_SUCCESS;
@@ -33,6 +33,7 @@ int *read_file(const char *path, int size) {
 
     int *a = (int *) malloc(size * sizeof(int));
     if (a == NULL) {
+        fclose(f);
         return NULL;
     }
     for (int i = 0; i < size; ++i) {

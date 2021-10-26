@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
-
 #include <cstdlib>
 #include <random>
 
 #define PATH "text.txt"
+
 extern "C" {
 #include "prog.h"
 #include "input_data.h"
@@ -11,8 +11,9 @@ extern "C" {
 
 #define STRESS_ITERATION_NUMBER 10
 #define SIZE_CONDITION 100
+#define BAD_SIZE 1
 
-TEST(TestConsistent1, Bisector) {
+TEST(TestParallel1, Bisector) {
     int *a = (int *) malloc(SIZE_CONDITION * sizeof(int));
     for (int i = 0; i < SIZE_CONDITION; ++i) {
         a[i] = i;
@@ -27,12 +28,12 @@ TEST(TestConsistent1, Bisector) {
     free(a);
 }
 
-TEST(TestConsistent2, RandomElems) {
+TEST(TestParallel2, RandomElems) {
     EXPECT_TRUE(write_file(PATH, SIZE_CONDITION) == EXIT_SUCCESS);
     int *a = read_file(PATH, SIZE_CONDITION);
     EXPECT_TRUE(a != nullptr);
     res_coef *res = run_prog(a, SIZE_CONDITION);
-    FILE *f = fopen("../data/consistent_res.txt", "w+");
+    FILE *f = fopen("../data/parallel_res.txt", "w+");
     EXPECT_FALSE(f == nullptr);
     fprintf(f, "%f %f", res->k, res->b);
     fclose(f);
@@ -40,25 +41,40 @@ TEST(TestConsistent2, RandomElems) {
     free(a);
 }
 
+TEST(BadValueParallel, BadSize) {
+    int *a = (int *) malloc(BAD_SIZE * sizeof(int));
+    for (int i = 0; i < BAD_SIZE; ++i) {
+        a[i] = i;
+    }
+    res_coef *res = run_prog(a, BAD_SIZE);
+    EXPECT_TRUE(res == nullptr);
+    free(res);
+    free(a);
+}
+
+
 TEST(time, time) {
     double general_time = 0;
     double average_time;
 
-    size_t times = 10;
+    size_t times = STRESS_ITERATION_NUMBER;
     int *a = read_file(PATH, SIZE_CONDITION);
     for (size_t i = 0; i < times; ++i) {
-        double timer = clock();
+        double timer;
+        timer = clock();
         res_coef *res = run_prog(a, SIZE_CONDITION);
         timer = clock() - timer;
         general_time += timer;
         free(res);
     }
     average_time = general_time / times / CLOCKS_PER_SEC;
-    FILE *f = fopen("../data/consistent_time.txt", "w+");
+    FILE *f = fopen("../data/parallel_time.txt", "w+");
     fprintf(f, "%lf", average_time);
+
     fclose(f);
     free(a);
 }
+
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);

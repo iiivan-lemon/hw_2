@@ -9,7 +9,7 @@ extern "C" {
 #define SIZE_CONDITION 100
 #define PATH "text.txt"
 
-TEST(TestInputData1, RandomArraySize) {
+TEST(TestInputData, RandomArraySize) {
     size_t size_test = SIZE_CONDITION;
 
     EXPECT_TRUE(write_file(PATH, size_test) == EXIT_SUCCESS);
