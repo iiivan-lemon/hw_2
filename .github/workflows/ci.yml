@@ -25,12 +25,13 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN}}
 
       - name: Tests
-        run: mkdir runtests && cd runtests && cmake .. && make && ./tests && ./tests_parallel && ./comparison && lcov -t "hw2" -o coverage.txt -c -d . && cp coverage.txt ../
+        run: mkdir runtests && cd runtests && cmake -fsanitize=address  -fsanitize=leak -fsanitize=undefined .. && make && ./tests && ./tests_parallel && ./comparison && lcov -t "hw2" -o coverage.txt -c -d . && cp coverage.txt ../
 
       - name: Valgrind install
         run: sudo apt-get update && sudo apt-get install -y valgrind && mkdir valgrind_tests  
       - name: Valgrind 
-        run: cd valgrind_tests && cmake .. && make && valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all -s -q ./tests ./tests_parallel
+        run: cd valgrind_tests && cmake .. && make && valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all -s -q ./tests && valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all -s -q ./tests_parallel
+      
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
