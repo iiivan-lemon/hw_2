@@ -30,7 +30,7 @@ jobs:
       - name: Valgrind install
         run: sudo apt-get update && sudo apt-get install -y valgrind && mkdir valgrind_tests  
       - name: Valgrind 
-        run: cd valgrind_tests && cmake .. && make && valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all -s -q ./runTests ./hw_2
+        run: cd valgrind_tests && cmake .. && make && valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all -s -q ./tests ./tests_parallel
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
